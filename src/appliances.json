@@ -1,0 +1,26 @@
+[
+  {
+    "description": "Clock Radio",
+    "watts": 10,
+    "quantity": 1,
+    "usage": 1
+  },
+  {
+    "description": "Coffee Maker",
+    "watts": 1050,
+    "quantity": 1,
+    "usage": 1
+  },
+  {
+    "description": "Personal Computer",
+    "watts": 250,
+    "quantity": 1,
+    "usage": 1
+  },
+  {
+    "description": "60\" LED Flatscreen TV",
+    "watts": 75,
+    "quantity": 1,
+    "usage": 1
+  }
+]

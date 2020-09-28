@@ -1,0 +1,11 @@
+.my-counter .num{
+    border:1px solid #ccc;
+    padding:3px 15px;
+}
+
+.my-counter .minus, .my-counter .plus{
+    background-color: grey;
+    padding: 5px;
+    color:#fff;
+    cursor:pointer;
+}
