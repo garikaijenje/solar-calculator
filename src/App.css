@@ -30,6 +30,12 @@ body{
   cursor: pointer;
 }
 
+.bx .selected{
+  background: red;
+  border-color: red;
+  border: none;
+}
+
 .bx .my-btn:hover{
   background-color: grey;
 }
@@ -39,4 +45,18 @@ body{
   font-weight:bold;
   text-align:center;
   cursor: pointer;
+}
+
+.cbtn{
+  position: relative;
+  border: 2px dotted #ccc;
+  cursor:pointer;
+  padding:3px;
+  margin:20px;
+}
+
+.search{
+  padding: 15px;
+  width: 100%;
+  margin: 50px 0;
 }

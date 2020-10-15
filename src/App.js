@@ -4,32 +4,28 @@ import data from "./appliances.json";
 import Counter from './Counter'
 
 function App() {
-
   const [appliances, setAppliances] = useState(data);
   const [selected, setSelected] = useState([]);
   const [totalPower, setTotalPower] = useState(0);
   const [energy, setEnergy] = useState(0);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   useEffect(() => {
-    console.log(selected);
+    // console.log(selected);
 
     let tp = 0;
     let e = 0;
 
     Object.keys(selected).map((key) => {
-      
       // console.log(selected[key].watts);
 
       tp += selected[key].watts * selected[key].quantity;
       e += tp * selected[key].usage;
-
     });
 
     setTotalPower(tp);
     setEnergy(e);
-
-
-  }, [selected])
+  }, [selected]);
 
   const removeSelected = (objectKey) => {
     let reducedObject = [];
@@ -38,7 +34,6 @@ function App() {
     });
 
     setSelected(reducedObject);
-    
   };
 
   const updateQuantity = (objectKey, count) => {
@@ -69,20 +64,101 @@ function App() {
     setSelected(newState);
   };
 
+  const addToSelection = (appliance) => {
 
-  function isAdded(appliance){
+    try {
 
-    let status = false;
-    Object.keys(selected).map((key) => {
-      status = key === appliance ? false : true;
-    });
+      if (Object.keys(selected).length !== 0) {
+        let found = false;
 
-    console.log(status, appliance);
+        Object.keys(selected).map((key) => {
+          if (
+            selected[key].description === appliance.description &&
+            selected[key].watts == appliance.watts
+          ) {
+            found = true;
+          }
+        });
 
-    return status;
+        if (found === false) setSelected([...selected, appliance]);
+      } else {
+        setSelected([...selected, appliance]);
+      }
+      
+    } catch (error) {
+      alert(error);
+    }
 
+    
+  };
+
+  function isAdded(appliance) {
+
+    try {
+
+      if (Object.keys(selected).length !== 0) {
+        let found = false;
+
+        Object.keys(selected).map((key) => {
+          if (
+            selected[key].description === appliance.description &&
+            selected[key].watts == appliance.watts
+          ) {
+            found = true;
+          }
+        });
+
+        return found;
+      } else {
+        return false;
+      }
+      
+    } catch (error) {
+      alert(error);
+    }
+
+    
   }
 
+  const excludeColumnsFromSearch = ["usage","quantity"];
+
+  const searchKeywords = (keyword) => {
+
+    
+    const lowercasedValue = keyword.toLowerCase();
+
+    if (lowercasedValue === "" ) setAppliances(data);
+
+    else {
+
+      const filteredData = data.filter((item) => {
+        return Object.keys(item).some((key) =>
+          excludeColumnsFromSearch.includes(key)
+            ? false
+            : item[key].toString().toLowerCase().includes(lowercasedValue)
+        );
+      });
+      setAppliances(filteredData);
+    }
+
+
+    setSearchKeyword(keyword);
+  }
+
+  function label(appliance) {
+    let label = isAdded(appliance) ? "Selected" : "Select";
+
+    return (
+      <>
+        <span
+          className={isAdded(appliance) ? "my-btn selected" : "my-btn "}
+          onClick={() => addToSelection(appliance)}
+        >
+          {label}
+        </span>
+      </>
+    );
+  }
 
   return (
     <>
@@ -90,7 +166,16 @@ function App() {
         <div className="row">
           <div className="col-sm-12">
             <h1 className="text-center">Solar Calculator</h1>
+            <br />
+            <br />
 
+            <input
+              type="search"
+              placeholder="Search"
+              value={searchKeyword}
+              onChange={(keyword) => searchKeywords(keyword.target.value) }
+              className="search"
+            />
             <div className="row">
               {appliances.map((appliance, index) => (
                 <div key={index} className="col-sm-4">
@@ -101,14 +186,15 @@ function App() {
                       <strong>{appliance.watts.toLocaleString()}</strong> watts
                       <span
                         className="my-btn"
-                        onClick={() =>
-                          isAdded(appliance)
-                            ? null
-                            : setSelected([...selected, appliance])
-                        }
+                        // onClick={() =>
+                        //   isAdded(appliance)
+                        //     ? alert('Already added')
+                        //     : setSelected([...selected, appliance])
+                        // }
+                        onClick={() => addToSelection(appliance)}
                       >
                         {/* {isAdded(appliance) ? "Added" : "Select"} */}
-                        Select
+                        {label(appliance)}
                       </span>
                     </p>
                   </div>
@@ -119,7 +205,11 @@ function App() {
             <br />
             <br />
             <br />
+            <center>
+              <span className="cbtn">Add Custom Appliance</span>
+            </center>
 
+            <br />
             <table border="1" className="my-table">
               <thead>
                 <tr>
